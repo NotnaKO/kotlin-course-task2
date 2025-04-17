@@ -3,6 +3,7 @@ package org.example.services
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -50,8 +51,8 @@ class WeatherService {
                 parameter("start_date", startDate.toString())
                 parameter("end_date", endDate.toString())
             }.apply {
-                if (status != HttpStatusCode.OK) {
-                    throw Exception("Failed to fetch data: $status \n${body<String>()}")
+                if (!status.isSuccess()) {
+                    throw ResponseException(this, "Failed to fetch data from Open-Meteo API")
                 }
             }.body()
 
@@ -59,8 +60,7 @@ class WeatherService {
             cache[cacheKey] = response
 
             return response
-        } catch (e: Exception) {
-            println("Error fetching weather data: ${e.message}")
+        } catch (e: ResponseException) {
             return WeatherResponse(
                 latitude = latitude,
                 longitude = longitude,

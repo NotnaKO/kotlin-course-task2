@@ -14,11 +14,12 @@ fun main() = runBlocking {
     try {
         while (true) {
             println("Would you like to make a new request? (yes to continue, no to exit)")
-            val userChoice = readLine()?.trim()?.lowercase()
+            val userChoice = readlnOrNull()?.trim()?.lowercase()
             if (userChoice == "no") {
                 println("Exiting the application. Goodbye!")
                 break
-            } else if (userChoice != "yes") {
+            }
+            if (userChoice != "yes") {
                 println("Invalid input. Please type 'yes' to continue or 'no' to exit.")
                 continue
             }
