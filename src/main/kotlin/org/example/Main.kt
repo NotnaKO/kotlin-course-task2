@@ -12,26 +12,29 @@ fun main() = runBlocking {
     println("This application uses the Open-Meteo API to analyze weather data")
 
     try {
-        val (latitude, longitude) = ui.getLocationInput()
+        while (true) {
+            println("Let's do a new request")
+            val (latitude, longitude) = ui.getLocationInput()
 
-        // Get date range input
-        val (startDate, endDate) = ui.getDateRangeInput()
+            // Get date range input
+            val (startDate, endDate) = ui.getDateRangeInput()
 
-        println("\nFetching weather data. Please wait...")
+            println("\nFetching weather data. Please wait...")
 
-        // Get weather data
-        val response = weatherService.getHistoricalWeatherData(
-            latitude, longitude, startDate, endDate
-        )
+            // Get weather data
+            val response = weatherService.getHistoricalWeatherData(
+                latitude, longitude, startDate, endDate
+            )
 
-        if (response.error) {
-            ui.displayError("Failed to fetch weather data: ${response.reason ?: "Unknown error"}")
-        } else {
-            // Analyze data
-            val analysis = weatherService.analyzeTemperatureData(response)
+            if (response.error) {
+                ui.displayError("Failed to fetch weather data: ${response.reason ?: "Unknown error"}")
+            } else {
+                // Analyze data
+                val analysis = weatherService.analyzeTemperatureData(response)
 
-            // Display results
-            ui.displayResults(analysis, latitude, longitude)
+                // Display results
+                ui.displayResults(analysis, latitude, longitude)
+            }
         }
     } catch (e: Exception) {
         ui.displayError("An unexpected error occurred: ${e.message}")

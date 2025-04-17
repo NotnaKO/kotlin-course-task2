@@ -5,6 +5,7 @@ import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.datetime.*
 import kotlinx.serialization.json.Json
@@ -48,6 +49,10 @@ class WeatherService {
                 parameter("hourly", "temperature_2m")
                 parameter("start_date", startDate.toString())
                 parameter("end_date", endDate.toString())
+            }.apply {
+                if (status != HttpStatusCode.OK) {
+                    throw Exception("Failed to fetch data: $status \n${body<String>()}")
+                }
             }.body()
 
             // Cache the response
