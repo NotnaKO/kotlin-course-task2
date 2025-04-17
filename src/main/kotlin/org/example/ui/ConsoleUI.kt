@@ -48,7 +48,7 @@ class ConsoleUI {
             try {
                 val input = readlnOrNull()
                 startDate = LocalDate.parse(input ?: "")
-            } catch (e: Exception) {
+            } catch (e: DateTimeParseException) {
                 println("Invalid date format. Please use YYYY-MM-DD.")
             }
         }
