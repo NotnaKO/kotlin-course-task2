@@ -35,14 +35,14 @@ class ConsoleUI {
                 println("Invalid input. Please enter a valid number.")
             }
         }
-        
+
         return Pair(latitude, longitude)
     }
-    
+
     fun getDateRangeInput(): Pair<LocalDate, LocalDate> {
         var startDate: LocalDate? = null
         var endDate: LocalDate? = null
-        
+
         while (startDate == null) {
             print("Enter start date (YYYY-MM-DD): ")
             try {
@@ -52,13 +52,13 @@ class ConsoleUI {
                 println("Invalid date format. Please use YYYY-MM-DD.")
             }
         }
-        
+
         while (endDate == null) {
             print("Enter end date (YYYY-MM-DD): ")
             try {
                 val input = readlnOrNull()
                 val parsedDate = LocalDate.parse(input ?: "")
-                
+
                 if (parsedDate >= startDate) {
                     endDate = parsedDate
                 } else {
@@ -68,35 +68,23 @@ class ConsoleUI {
                 println("Invalid date format. Please use YYYY-MM-DD.")
             }
         }
-        
+
         return Pair(startDate, endDate)
     }
-    
-    fun displayResults(analysis: TemperatureAnalysis, latitude: Double, longitude: Double) {
+
+    fun displayResults(analysis: TemperatureAnalysis?, latitude: Double, longitude: Double) {
         println("\n---- Weather Analysis Results ----")
         println("Location: Latitude $latitude, Longitude $longitude")
-        
-        if (analysis.maxTemperature != null) {
+        if (analysis == null) {
+            println("No analysis available.")
+        } else {
             println("Maximum temperature: ${analysis.maxTemperature.temperature}°C on ${analysis.maxTemperature.time}")
-        } else {
-            println("Maximum temperature: Not available")
-        }
-        
-        if (analysis.minTemperature != null) {
             println("Minimum temperature: ${analysis.minTemperature.temperature}°C on ${analysis.minTemperature.time}")
-        } else {
-            println("Minimum temperature: Not available")
-        }
-        
-        if (analysis.averageTemperature != null) {
             println("Average temperature: ${String.format("%.2f", analysis.averageTemperature)}°C")
-        } else {
-            println("Average temperature: Not available")
         }
-        
         println("--------------------------------")
     }
-    
+
     fun displayError(message: String) {
         println("\n---- Error ----")
         println(message)

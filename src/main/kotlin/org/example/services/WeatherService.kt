@@ -70,16 +70,16 @@ class WeatherService {
         }
     }
 
-    fun analyzeTemperatureData(response: WeatherResponse): TemperatureAnalysis {
+    fun analyzeTemperatureData(response: WeatherResponse): TemperatureAnalysis? {
         if (response.error || response.hourly == null) {
-            return TemperatureAnalysis(null, null, null)
+            return null
         }
 
         val times = response.hourly.time
         val temperatures = response.hourly.temperature_2m
 
         if (times.isEmpty() || temperatures.isEmpty()) {
-            return TemperatureAnalysis(null, null, null)
+            return null
         }
 
         var maxTemp = temperatures[0]

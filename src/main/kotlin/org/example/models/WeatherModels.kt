@@ -29,7 +29,7 @@ data class TemperatureData(
 )
 
 data class TemperatureAnalysis(
-    val maxTemperature: TemperatureData?,
-    val minTemperature: TemperatureData?,
-    val averageTemperature: Double?
+    val maxTemperature: TemperatureData,
+    val minTemperature: TemperatureData,
+    val averageTemperature: Double
 )
