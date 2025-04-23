@@ -11,7 +11,7 @@ class ConsoleUI {
             print("Enter latitude (-90 to 90): ")
             try {
                 val input = readlnOrNull()?.toDoubleOrNull()
-                if (input != null && input >= -90 && input <= 90) {
+                if (input != null && input in -90.0 .. 90.0) {
                     latitude = input
                 } else {
                     println("Invalid latitude. Please enter a number between -90 and 90.")
@@ -26,7 +26,7 @@ class ConsoleUI {
             print("Enter longitude (-180 to 180): ")
             try {
                 val input = readlnOrNull()?.toDoubleOrNull()
-                if (input != null && input >= -180 && input <= 180) {
+                if (input != null && input in -180.0 .. 180.0) {
                     longitude = input
                 } else {
                     println("Invalid longitude. Please enter a number between -180 and 180.")
@@ -48,7 +48,7 @@ class ConsoleUI {
             try {
                 val input = readlnOrNull()
                 startDate = LocalDate.parse(input ?: "")
-            } catch (e: Exception) {
+            } catch (e: DateTimeParseException) {
                 println("Invalid date format. Please use YYYY-MM-DD.")
             }
         }
