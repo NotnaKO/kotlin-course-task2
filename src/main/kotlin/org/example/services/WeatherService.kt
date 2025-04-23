@@ -28,7 +28,7 @@ class WeatherService {
 
     private val cache = mutableMapOf<CacheKey, WeatherResponse>()
 
-    data class CacheKey(
+    private data class CacheKey(
         val location: Location,
         val dataRange: ClosedRange<LocalDate>
     )

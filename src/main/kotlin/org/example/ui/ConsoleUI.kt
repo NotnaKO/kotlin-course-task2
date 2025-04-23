@@ -2,7 +2,6 @@ package org.example.ui
 
 import kotlinx.datetime.LocalDate
 import org.example.models.TemperatureAnalysis
-import java.time.format.DateTimeParseException
 
 class Location(
     val latitude: Double,
@@ -14,7 +13,7 @@ fun getLocationInput(): Location {
     while (latitude == null) {
         print("Enter latitude (-90 to 90): ")
         try {
-            val input = readlnOrNull()?.toDoubleOrNull()
+            val input = readln().toDoubleOrNull()
             if (input != null && input in -90.0..90.0) {
                 latitude = input
             } else {
@@ -29,7 +28,7 @@ fun getLocationInput(): Location {
     while (longitude == null) {
         print("Enter longitude (-180 to 180): ")
         try {
-            val input = readlnOrNull()?.toDoubleOrNull()
+            val input = readln().toDoubleOrNull()
             if (input != null && input in -180.0..180.0) {
                 longitude = input
             } else {
@@ -50,8 +49,7 @@ fun getDateRangeInput(): ClosedRange<LocalDate> {
     while (startDate == null) {
         print("Enter start date (YYYY-MM-DD): ")
         try {
-            val input = readlnOrNull()
-            startDate = LocalDate.parse(input ?: "")
+            startDate = LocalDate.parse(readln())
         } catch (_: IllegalArgumentException) {
             println("Invalid date format. Please use YYYY-MM-DD.")
         } catch (_: CharacterCodingException) {
@@ -62,8 +60,7 @@ fun getDateRangeInput(): ClosedRange<LocalDate> {
     while (endDate == null) {
         print("Enter end date (YYYY-MM-DD): ")
         try {
-            val input = readlnOrNull()
-            val parsedDate = LocalDate.parse(input ?: "")
+            val parsedDate = LocalDate.parse(readln())
 
             if (parsedDate >= startDate) {
                 endDate = parsedDate
