@@ -3,11 +3,13 @@ package org.example
 import kotlinx.coroutines.runBlocking
 import org.example.services.WeatherService
 import org.example.services.analyzeTemperatureData
-import org.example.ui.ConsoleUI
+import org.example.ui.displayError
+import org.example.ui.displayResults
+import org.example.ui.getDateRangeInput
+import org.example.ui.getLocationInput
 
 fun main() = runBlocking {
     val weatherService = WeatherService()
-    val ui = ConsoleUI()
 
     println("Welcome to Weather Analysis Tool")
     println("This application uses the Open-Meteo API to analyze weather data")
@@ -24,30 +26,30 @@ fun main() = runBlocking {
                 println("Invalid input. Please type 'yes' to continue or 'no' to exit.")
                 continue
             }
-            val (latitude, longitude) = ui.getLocationInput()
+            val location = getLocationInput()
 
             // Get date range input
-            val (startDate, endDate) = ui.getDateRangeInput()
+            val dateRange = getDateRangeInput()
 
             println("\nFetching weather data. Please wait...")
 
             // Get weather data
             val response = weatherService.getHistoricalWeatherData(
-                latitude, longitude, startDate, endDate
+                location, dateRange,
             )
 
             if (response.error) {
-                ui.displayError("Failed to fetch weather data: ${response.reason ?: "Unknown error"}")
+                displayError("Failed to fetch weather data: ${response.reason ?: "Unknown error"}")
             } else {
                 // Analyze data
                 val analysis = analyzeTemperatureData(response)
 
                 // Display results
-                ui.displayResults(analysis, latitude, longitude)
+                displayResults(analysis, location)
             }
         }
     } catch (e: Exception) {
-        ui.displayError("An unexpected error occurred: ${e.message}")
+        displayError("An unexpected error occurred: ${e.message}")
     } finally {
         weatherService.close()
     }

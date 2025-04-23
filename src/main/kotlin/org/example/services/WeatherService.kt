@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 import org.example.models.TemperatureAnalysis
 import org.example.models.TemperatureData
 import org.example.models.WeatherResponse
+import org.example.ui.Location
 
 class WeatherService {
     private val client = HttpClient(CIO) {
@@ -28,12 +29,10 @@ class WeatherService {
     private val cache = mutableMapOf<String, WeatherResponse>()
 
     suspend fun getHistoricalWeatherData(
-        latitude: Double,
-        longitude: Double,
-        startDate: LocalDate,
-        endDate: LocalDate
+        location: Location,
+        dateRange: ClosedRange<LocalDate>,
     ): WeatherResponse {
-        val cacheKey = "$latitude-$longitude-$startDate-$endDate"
+        val cacheKey = "$location-$dateRange"
 
         // Check cache first
         if (cache.containsKey(cacheKey)) {
@@ -45,11 +44,11 @@ class WeatherService {
 
         try {
             val response: WeatherResponse = client.get(url) {
-                parameter("latitude", latitude)
-                parameter("longitude", longitude)
+                parameter("latitude", location.latitude)
+                parameter("longitude", location.longitude)
                 parameter("hourly", "temperature_2m")
-                parameter("start_date", startDate.toString())
-                parameter("end_date", endDate.toString())
+                parameter("start_date", dateRange.start)
+                parameter("end_date", dateRange.endInclusive)
             }.apply {
                 if (!status.isSuccess()) {
                     throw ResponseException(this, "Failed to fetch data from Open-Meteo API")
@@ -62,8 +61,8 @@ class WeatherService {
             return response
         } catch (e: ResponseException) {
             return WeatherResponse(
-                latitude = latitude,
-                longitude = longitude,
+                latitude = location.latitude,
+                longitude = location.longitude,
                 error = true,
                 reason = e.message
             )
