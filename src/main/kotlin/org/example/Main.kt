@@ -2,6 +2,7 @@ package org.example
 
 import kotlinx.coroutines.runBlocking
 import org.example.services.WeatherService
+import org.example.services.analyzeTemperatureData
 import org.example.ui.ConsoleUI
 
 fun main() = runBlocking {
@@ -39,7 +40,7 @@ fun main() = runBlocking {
                 ui.displayError("Failed to fetch weather data: ${response.reason ?: "Unknown error"}")
             } else {
                 // Analyze data
-                val analysis = weatherService.analyzeTemperatureData(response)
+                val analysis = analyzeTemperatureData(response)
 
                 // Display results
                 ui.displayResults(analysis, latitude, longitude)

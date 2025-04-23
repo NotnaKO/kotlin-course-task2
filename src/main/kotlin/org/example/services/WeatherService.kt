@@ -70,50 +70,35 @@ class WeatherService {
         }
     }
 
-    fun analyzeTemperatureData(response: WeatherResponse): TemperatureAnalysis? {
-        if (response.error || response.hourly == null) {
-            return null
-        }
-
-        val times = response.hourly.time
-        val temperatures = response.hourly.temperature_2m
-
-        if (times.isEmpty() || temperatures.isEmpty()) {
-            return null
-        }
-
-        var maxTemp = temperatures[0]
-        var minTemp = temperatures[0]
-        var maxTempTime = times[0]
-        var minTempTime = times[0]
-        var sum = 0.0
-
-        for (i in temperatures.indices) {
-            val temp = temperatures[i]
-
-            if (temp > maxTemp) {
-                maxTemp = temp
-                maxTempTime = times[i]
-            }
-
-            if (temp < minTemp) {
-                minTemp = temp
-                minTempTime = times[i]
-            }
-
-            sum += temp
-        }
-
-        val avgTemp = sum / temperatures.size
-
-        return TemperatureAnalysis(
-            maxTemperature = TemperatureData(maxTempTime, maxTemp),
-            minTemperature = TemperatureData(minTempTime, minTemp),
-            averageTemperature = avgTemp
-        )
-    }
-
     fun close() {
         client.close()
     }
+}
+
+fun analyzeTemperatureData(response: WeatherResponse): TemperatureAnalysis? {
+    if (response.error || response.hourly == null) {
+        return null
+    }
+
+    val times = response.hourly.time
+    val temperatures = response.hourly.temperature_2m
+
+    if (times.isEmpty() || temperatures.isEmpty()) {
+        return null
+    }
+
+    val avgTemp = temperatures.average()
+    val maxTempIndex = temperatures.indices.maxBy { temperatures[it] }
+    val minTempIndex = temperatures.indices.minBy { temperatures[it] }
+
+    val maxTemp = temperatures[maxTempIndex]
+    val maxTempTime = times[maxTempIndex]
+    val minTempTime = times[minTempIndex]
+    val minTemp = temperatures[minTempIndex]
+
+    return TemperatureAnalysis(
+        maxTemperature = TemperatureData(maxTempTime, maxTemp),
+        minTemperature = TemperatureData(minTempTime, minTemp),
+        averageTemperature = avgTemp
+    )
 }
