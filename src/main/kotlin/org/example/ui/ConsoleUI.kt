@@ -11,7 +11,7 @@ class ConsoleUI {
             print("Enter latitude (-90 to 90): ")
             try {
                 val input = readlnOrNull()?.toDoubleOrNull()
-                if (input != null && input >= -90 && input <= 90) {
+                if (input != null && input in -90.0 .. 90.0) {
                     latitude = input
                 } else {
                     println("Invalid latitude. Please enter a number between -90 and 90.")
