@@ -20,7 +20,7 @@ fun getLocationInput(): Location {
             } else {
                 println("Invalid latitude. Please enter a number between -90 and 90.")
             }
-        } catch (e: Exception) {
+        } catch (_: CharacterCodingException) {
             println("Invalid input. Please enter a valid number.")
         }
     }
@@ -35,7 +35,7 @@ fun getLocationInput(): Location {
             } else {
                 println("Invalid longitude. Please enter a number between -180 and 180.")
             }
-        } catch (e: Exception) {
+        } catch (_: CharacterCodingException) {
             println("Invalid input. Please enter a valid number.")
         }
     }
@@ -52,8 +52,10 @@ fun getDateRangeInput(): ClosedRange<LocalDate> {
         try {
             val input = readlnOrNull()
             startDate = LocalDate.parse(input ?: "")
-        } catch (e: DateTimeParseException) {
+        } catch (_: IllegalArgumentException) {
             println("Invalid date format. Please use YYYY-MM-DD.")
+        } catch (_: CharacterCodingException) {
+            println("Invalid input. Please enter a valid input.")
         }
     }
 
@@ -68,8 +70,10 @@ fun getDateRangeInput(): ClosedRange<LocalDate> {
             } else {
                 println("End date must be after or equal to start date.")
             }
-        } catch (e: Exception) {
+        } catch (_: IllegalArgumentException) {
             println("Invalid date format. Please use YYYY-MM-DD.")
+        } catch (_: CharacterCodingException) {
+            println("Invalid input. Please enter a valid input.")
         }
     }
 

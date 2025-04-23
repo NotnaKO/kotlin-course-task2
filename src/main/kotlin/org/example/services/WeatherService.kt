@@ -26,13 +26,18 @@ class WeatherService {
         }
     }
 
-    private val cache = mutableMapOf<String, WeatherResponse>()
+    private val cache = mutableMapOf<CacheKey, WeatherResponse>()
+
+    data class CacheKey(
+        val location: Location,
+        val dataRange: ClosedRange<LocalDate>
+    )
 
     suspend fun getHistoricalWeatherData(
         location: Location,
         dateRange: ClosedRange<LocalDate>,
     ): WeatherResponse {
-        val cacheKey = "$location-$dateRange"
+        val cacheKey = CacheKey(location, dateRange)
 
         // Check cache first
         if (cache.containsKey(cacheKey)) {
